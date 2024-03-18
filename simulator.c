@@ -2,14 +2,50 @@
 #include "include/simulator.h"
 
 
+int BTN_FLAGS_TEST = 0;
+
+static void event_cb(lv_event_t * e)
+{
+	
+    /*The original target of the event. Can be the buttons or the container*/
+    lv_obj_t * target = lv_event_get_target(e);
+ 	int id = lv_btnmatrix_get_selected_btn(target);
+    /*The current target is always the container as the event is added to it*/
+    lv_obj_t * cont = lv_event_get_current_target(e);
+	lv_event_code_t code = lv_event_get_code(e);
+
+	if(code == LV_EVENT_RELEASED )
+	{
+		BTN_FLAGS_TEST = 0;
+	}
+	else
+	{
+		switch(id)
+		{
+			case 0:
+				BTN_FLAGS_TEST |=  BUTTON1;
+			break;
+			case 1:
+				BTN_FLAGS_TEST |=  BUTTON2;
+			break;
+			case 2:
+				BTN_FLAGS_TEST |=  BUTTON3;
+			break;
+			case 3:
+				BTN_FLAGS_TEST |=  BUTTON4;
+			break;
+			case 4:
+				BTN_FLAGS_TEST |=  BUTTON5;
+			break;
+			default:
+				BTN_FLAGS_TEST = 0;
+			break;
+		}
+	}
+}
+
 void create_sim(void)
 {
-//Write codes lv_scr_act()
-	// lv_scr_act() = lv_obj_create(NULL);
-	// lv_obj_set_size(lv_scr_act(), 720, 1280);
-
-	// //Write style for lv_scr_act(), Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
-	// lv_obj_set_style_bg_opa(lv_scr_act(), 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
 	//Write codes screen_canvas_1
 	lv_obj_t *screen_canvas_1 = lv_canvas_create(lv_scr_act());
@@ -61,7 +97,10 @@ void create_sim(void)
 	lv_obj_set_style_pad_column(screen_btnm_1, 50, LV_PART_MAIN|LV_STATE_DEFAULT);
 	lv_obj_set_style_radius(screen_btnm_1, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 	lv_obj_set_style_bg_opa(screen_btnm_1, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_obj_set_style_border_color(screen_btnm_1, lv_color_hex(0x1C1C1C), LV_PART_MAIN|LV_STATE_DEFAULT);
 	lv_obj_set_style_bg_color(screen_btnm_1, lv_color_hex(0x1C1C1C), LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_obj_set_style_border_opa(screen_btnm_1, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_obj_set_style_shadow_color(screen_btnm_1, lv_color_hex(0x000000), LV_PART_MAIN|LV_STATE_DEFAULT);
 
 	//Write style for screen_btnm_1, Part: LV_PART_ITEMS, State: LV_STATE_DEFAULT.
 	lv_obj_set_style_border_width(screen_btnm_1, 10, LV_PART_ITEMS|LV_STATE_DEFAULT);
@@ -69,7 +108,7 @@ void create_sim(void)
 	lv_obj_set_style_border_color(screen_btnm_1, lv_color_hex(0x5E5E5E), LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_border_side(screen_btnm_1, LV_BORDER_SIDE_FULL, LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_text_color(screen_btnm_1, lv_color_hex(0xffffff), LV_PART_ITEMS|LV_STATE_DEFAULT);
-	lv_obj_set_style_radius(screen_btnm_1, 30, LV_PART_ITEMS|LV_STATE_DEFAULT);
+	lv_obj_set_style_radius(screen_btnm_1, 32, LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_bg_opa(screen_btnm_1, 255, LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_bg_color(screen_btnm_1, lv_color_hex(0x1C1C1C), LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_shadow_width(screen_btnm_1, 1, LV_PART_ITEMS|LV_STATE_DEFAULT);
@@ -78,6 +117,7 @@ void create_sim(void)
 	lv_obj_set_style_shadow_spread(screen_btnm_1, 3, LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_shadow_ofs_x(screen_btnm_1, 0, LV_PART_ITEMS|LV_STATE_DEFAULT);
 	lv_obj_set_style_shadow_ofs_y(screen_btnm_1, 0, LV_PART_ITEMS|LV_STATE_DEFAULT);
+	lv_obj_add_event_cb(screen_btnm_1, event_cb, LV_EVENT_CLICKED , NULL);
     
 
 	//Update current lv_scr_act() layout.
